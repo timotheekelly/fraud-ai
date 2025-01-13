@@ -15,7 +15,10 @@ public class DataPreprocessor {
 
     TransactionRepository transactionRepository;
 
-    private static final int BATCH_SIZE = 1000; // Define batch size for bulk writes
+    private static final int BATCH_SIZE = 500; // Define batch size for bulk writes
+    private static final int DOCUMENT_LIMIT = 250000;  // Maximum documents to insert
+
+    private int documentCount = 0;  // Counter for total inserted documents
 
     public DataPreprocessor(TransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
@@ -31,7 +34,13 @@ public class DataPreprocessor {
 
             // Read the file line-by-line
             while ((line = reader.readLine()) != null) {
+                if (documentCount >= DOCUMENT_LIMIT) {
+                    System.out.println("Reached the document limit of " + DOCUMENT_LIMIT + ". Stopping data load.");
+                    break;  // Stop processing when the limit is reached
+                }
+
                 batch.add(line);
+                documentCount++;
 
                 // When batch size is reached, process it
                 if (batch.size() == BATCH_SIZE) {

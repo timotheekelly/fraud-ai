@@ -1,7 +1,7 @@
 package com.mongodb;
 
-import com.mongodb.bulk.BulkWriteResult;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.BulkWriteOptions;
 import com.mongodb.client.model.WriteModel;
 import org.bson.Document;
 
@@ -17,9 +17,11 @@ public class TransactionRepository {
 
     public void bulkSaveTransactions(List<WriteModel<Document>> transactions) {
         if (!transactions.isEmpty()) {
-            BulkWriteResult result = collection.bulkWrite(transactions); // Perform bulk write operation
-            if (result.wasAcknowledged()) {
-                System.out.println("transactions successfully saved: " + transactions.size());
+            try {
+                BulkWriteOptions options = new BulkWriteOptions().ordered(true);
+                collection.bulkWrite(transactions, options); // Perform bulk write operation
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

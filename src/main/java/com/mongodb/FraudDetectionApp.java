@@ -3,7 +3,6 @@ package com.mongodb;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class FraudDetectionApp {
     private static FraudDetectionModel fraudDetectionModel;
